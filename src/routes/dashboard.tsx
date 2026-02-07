@@ -21,7 +21,7 @@ const Dashboard = () => {
     setLoading(true);
     const interviewQuery = query(
       collection(db, "interviews"),
-      where("userId", "==", userId)
+      where("userId", "==", userId),
     );
 
     const unsubscribe = onSnapshot(
@@ -43,14 +43,14 @@ const Dashboard = () => {
           description: "SOmething went wrong.. Try again later..",
         });
         setLoading(false);
-      }
+      },
     );
 
     return () => unsubscribe();
   }, [userId]);
 
   return (
-    <>
+    <div className="min-h-screen">
       <div className="flex w-full items-center justify-between">
         {/*Heading */}
         <Headings
@@ -102,7 +102,7 @@ const Dashboard = () => {
           </div>
         )}
       </div>
-    </>
+    </div>
   );
 };
 
