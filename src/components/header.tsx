@@ -3,12 +3,15 @@ import Container from "./container";
 import { cn } from "@/lib/utils";
 import LogoContainer from "./logo-container";
 import NavigationRoutes from "./navigation-routes";
-import { NavLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import ProfileContainer from "./profile-container";
 import ToggleContainer from "./toggle-container";
+import { Button } from "./ui/button";
+import { Sparkles } from "lucide-react";
 
 const Header = () => {
   const { userId } = useAuth();
+  const navigate = useNavigate();
 
   return (
     <header
@@ -26,22 +29,22 @@ const Header = () => {
           {/* Navigation section - Center */}
           <nav
             className={cn(
-              "hidden md:flex items-center gap-8 absolute left-1/2 transform -translate-x-1/2",
+              "hidden md:flex items-center gap-6 absolute left-1/2 transform -translate-x-1/2",
             )}
           >
             <NavigationRoutes />
             {userId && (
-              <NavLink
-                to={"/generate"}
-                className={({ isActive }) =>
-                  cn(
-                    "text-sm text-neutral-600 hover:text-neutral-900 transition-colors",
-                    isActive && "text-neutral-900 font-semibold",
-                  )
-                }
+              <Button
+                onClick={() => navigate("/generate")}
+                size="sm"
+                className="h-9 px-4 bg-primary text-primary-foreground hover:bg-primary/90 gap-2 relative overflow-hidden group shadow-sm ml-4"
               >
-                Take an Interview
-              </NavLink>
+                <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out" />
+                <Sparkles className="w-4 h-4 relative z-10" />
+                <span className="relative z-10 font-medium">
+                  Take Interview
+                </span>
+              </Button>
             )}
           </nav>
 
