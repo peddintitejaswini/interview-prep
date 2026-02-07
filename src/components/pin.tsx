@@ -7,9 +7,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "./ui/badge";
+import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
 import { TooltipButton } from "./tool-tip-button";
-import { Eye, Newspaper, Sparkles } from "lucide-react";
+import { Pencil, Newspaper, Sparkles } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -33,13 +34,11 @@ export const InterviewPin = ({
 
   return (
     <>
-      <Card className="p-4 rounded-md shadow-none hover:shadow-md shadow-gray-100 transition-all flex flex-col h-[260px]">
+      <Card className="p-4 rounded-md shadow-none hover:shadow-md shadow-gray-100 transition-all flex flex-col h-[260px] gap-2">
         <div className="flex-shrink-0">
-          <CardTitle className="text-lg mb-1.5">
-            {interview?.position}
-          </CardTitle>
+          <CardTitle className="text-lg">{interview?.position}</CardTitle>
         </div>
-        <div className="flex-grow min-h-0 mb-2">
+        <div className="flex-grow min-h-0">
           <CardDescription
             className="line-clamp-3 cursor-pointer hover:text-gray-700 transition-colors"
             onClick={() => setIsModalOpen(true)}
@@ -47,7 +46,7 @@ export const InterviewPin = ({
             {interview?.description}
           </CardDescription>
         </div>
-        <div className="flex-shrink-0 w-full flex items-center gap-2 flex-wrap mb-2">
+        <div className="flex-shrink-0 w-full h-14 flex items-start gap-2 flex-wrap overflow-hidden">
           {interview?.techStack.split(",").map((word, index) => (
             <Badge
               key={index}
@@ -76,16 +75,16 @@ export const InterviewPin = ({
           </p>
 
           {!onMockPage && (
-            <div className="flex items-center justify-center">
+            <div className="flex items-center gap-2">
               <TooltipButton
-                content="View"
+                content="Edit"
                 buttonVariant={"ghost"}
                 onClick={() => {
                   navigate(`/generate/${interview?.id}`);
                 }}
                 disbaled={false}
-                buttonClassName="hover:text-sky-500"
-                icon={<Eye />}
+                buttonClassName="hover:bg-gray-100 hover:text-gray-700"
+                icon={<Pencil className="w-4 h-4" />}
                 loading={false}
               />
 
@@ -96,22 +95,22 @@ export const InterviewPin = ({
                   navigate(`/generate/feedback/${interview?.id}`);
                 }}
                 disbaled={false}
-                buttonClassName="hover:text-yellow-500"
-                icon={<Newspaper />}
+                buttonClassName="hover:bg-gray-100 hover:text-gray-700"
+                icon={<Newspaper className="w-4 h-4" />}
                 loading={false}
               />
 
-              <TooltipButton
-                content="Start"
-                buttonVariant={"ghost"}
+              <Button
+                size="sm"
                 onClick={() => {
                   navigate(`/generate/interview/${interview?.id}`);
                 }}
-                disbaled={false}
-                buttonClassName="hover:text-sky-500"
-                icon={<Sparkles />}
-                loading={false}
-              />
+                className="h-8 px-3 bg-primary text-primary-foreground hover:bg-primary/90 text-xs gap-1.5 relative overflow-hidden group shadow-sm"
+              >
+                <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out" />
+                <Sparkles className="w-3.5 h-3.5 relative z-10" />
+                <span className="relative z-10 font-medium">Generate</span>
+              </Button>
             </div>
           )}
         </CardFooter>
