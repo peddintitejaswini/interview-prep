@@ -36,7 +36,7 @@ export const Feedback = () => {
   const navigate = useNavigate();
 
   if (!interviewId) {
-    navigate("/generate", { replace: true });
+    navigate("/dashboard/generate", { replace: true });
   }
   useEffect(() => {
     if (interviewId) {
@@ -44,7 +44,7 @@ export const Feedback = () => {
         if (interviewId) {
           try {
             const interviewDoc = await getDoc(
-              doc(db, "interviews", interviewId)
+              doc(db, "interviews", interviewId),
             );
             if (interviewDoc.exists()) {
               setInterview({
@@ -64,7 +64,7 @@ export const Feedback = () => {
           const querSanpRef = query(
             collection(db, "userAnswers"),
             where("userId", "==", userId),
-            where("mockIdRef", "==", interviewId)
+            where("mockIdRef", "==", interviewId),
           );
 
           const querySnap = await getDocs(querSanpRef);
@@ -95,7 +95,7 @@ export const Feedback = () => {
 
     const totalRatings = feedbacks.reduce(
       (acc, feedback) => acc + feedback.rating,
-      0
+      0,
     );
 
     return (totalRatings / feedbacks.length).toFixed(1);
@@ -111,10 +111,10 @@ export const Feedback = () => {
         <CustomBreadCrumb
           breadCrumbPage={"Feedback"}
           breadCrumbItems={[
-            { label: "Mock Interviews", link: "/generate" },
+            { label: "Mock Interviews", link: "/dashboard/generate" },
             {
               label: `${interview?.position}`,
-              link: `/generate/interview/${interview?.id}`,
+              link: `/dashboard/generate/interview/${interview?.id}`,
             },
           ]}
         />
@@ -150,7 +150,7 @@ export const Feedback = () => {
                   "px-5 py-3 flex items-center justify-between text-base rounded-t-lg transition-colors hover:no-underline",
                   activeFeed === feed.id
                     ? "bg-gradient-to-r from-purple-50 to-blue-50"
-                    : "hover:bg-gray-50"
+                    : "hover:bg-gray-50",
                 )}
               >
                 <span>{feed.question}</span>

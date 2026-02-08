@@ -28,7 +28,7 @@ const ToggleContainer = () => {
           <NavigationRoutes isMobile />
           {userId && (
             <Button
-              onClick={() => navigate("/generate")}
+              onClick={() => navigate("/dashboard/generate")}
               size="sm"
               className="w-full h-10 px-4 bg-primary text-primary-foreground hover:bg-primary/90 gap-2 relative overflow-hidden group shadow-sm mt-2"
             >

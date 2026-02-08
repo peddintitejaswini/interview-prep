@@ -35,7 +35,7 @@ const Header = () => {
             <NavigationRoutes />
             {userId && (
               <Button
-                onClick={() => navigate("/generate")}
+                onClick={() => navigate("/dashboard/generate")}
                 size="sm"
                 className="h-9 px-4 bg-primary text-primary-foreground hover:bg-primary/90 gap-2 relative overflow-hidden group shadow-sm ml-4"
               >

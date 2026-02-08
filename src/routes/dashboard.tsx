@@ -58,7 +58,7 @@ const Dashboard = () => {
           description="create and start your AI mock interview "
         />
 
-        <Link to={"/generate/create"}>
+        <Link to={"/dashboard/generate/create"}>
           <Button size={"sm"}>
             <Plus />
             Add New
@@ -93,7 +93,7 @@ const Dashboard = () => {
               interviews
             </p>
 
-            <Link to={"/generate/create"} className="mt-4">
+            <Link to={"/dashboard/generate/create"} className="mt-4">
               <Button size={"sm"}>
                 <Plus className="min-w-5 min-h-5 mr-1" />
                 Add New

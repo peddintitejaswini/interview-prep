@@ -156,7 +156,7 @@ const FormMockInterview = ({ initialData }: FormMockInterviewProps) => {
         }
       }
 
-      navigate("/generate");
+      navigate("/dashboard/generate");
     } catch (error) {
       console.log(error);
       toast.error("Error..", {
@@ -176,7 +176,7 @@ const FormMockInterview = ({ initialData }: FormMockInterviewProps) => {
       toast.success("Deleted!", {
         description: "Mock interview deleted successfully.",
       });
-      navigate("/generate");
+      navigate("/dashboard/generate");
     } catch (error) {
       console.error("Error deleting document: ", error);
       toast.error("Error", {
@@ -208,7 +208,9 @@ const FormMockInterview = ({ initialData }: FormMockInterviewProps) => {
       />
       <CustomBreadCrumb
         breadCrumbPage={breadCrumpPage}
-        breadCrumbItems={[{ label: "Mock Interviews", link: "/generate" }]}
+        breadCrumbItems={[
+          { label: "Mock Interviews", link: "/dashboard/generate" },
+        ]}
       />
 
       <div className="mt-4 flex items-center justify-between w-full">

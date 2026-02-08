@@ -23,25 +23,25 @@ import { Button } from "@/components/ui/button";
 const navItems = [
   {
     title: "Mock Interview Generator",
-    url: "/generate",
+    url: "/dashboard/generate",
     icon: MessageSquare,
     description: "Create and practice AI mock interviews",
   },
   {
     title: "Skill Gap Analysis",
-    url: "/generate/skill-gap",
+    url: "/dashboard/skill-gap",
     icon: FileText,
     description: "Job description and Resume skill gap",
   },
   {
     title: "Learning Roadmap",
-    url: "/generate/roadmap",
+    url: "/dashboard/roadmap",
     icon: Map,
     description: "Skill gaining roadmap",
   },
   {
     title: "Job Role Eligibility",
-    url: "/generate/job-roles",
+    url: "/dashboard/job-roles",
     icon: Briefcase,
     description: "Find eligible job roles based on your resume",
   },

@@ -46,11 +46,11 @@ const MockInterviewPage = () => {
   }
 
   if (!interviewId) {
-    navigate("/generate", { replace: true });
+    navigate("/dashboard/generate", { replace: true });
   }
 
   if (!interview) {
-    navigate("/generate", { replace: true });
+    navigate("/dashboard/generate", { replace: true });
   }
 
   return (
@@ -58,10 +58,10 @@ const MockInterviewPage = () => {
       <CustomBreadCrumb
         breadCrumbPage="Start"
         breadCrumbItems={[
-          { label: "Mock Interviews", link: "/generate" },
+          { label: "Mock Interviews", link: "/dashboard/generate" },
           {
             label: interview?.position || "",
-            link: `/generate/interview/${interview?.id}`,
+            link: `/dashboard/generate/interview/${interview?.id}`,
           },
         ]}
       />

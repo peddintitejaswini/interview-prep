@@ -39,27 +39,30 @@ const App = () => {
           <Route path="/signup/*" element={<SignUpPage />}></Route>
         </Route>
 
-        {/*Protected Routes*/}
+        {/*Protected Routes - Dashboard*/}
         <Route
           element={
             <ProtectRoutes>
               <DashboardLayout />
             </ProtectRoutes>
           }
-          path="/generate"
+          path="/dashboard"
         >
-          <Route index element={<Dashboard />} />
+          <Route path="generate" element={<Dashboard />} />
           <Route path="skill-gap" element={<SkillGapPage />} />
           <Route path="roadmap" element={<RoadmapPage />} />
           <Route path="job-roles" element={<JobRolesPage />} />
-          <Route path="create" element={<CreateEditPage />} />
-          <Route path=":interviewId" element={<CreateEditPage />} />
-          <Route path="interview/:interviewId" element={<MockLoadPage />} />
+          <Route path="generate/create" element={<CreateEditPage />} />
+          <Route path="generate/:interviewId" element={<CreateEditPage />} />
           <Route
-            path="interview/:interviewId/start"
+            path="generate/interview/:interviewId"
+            element={<MockLoadPage />}
+          />
+          <Route
+            path="generate/interview/:interviewId/start"
             element={<MockInterviewPage />}
           />
-          <Route path="feedback/:interviewId" element={<Feedback />} />
+          <Route path="generate/feedback/:interviewId" element={<Feedback />} />
         </Route>
       </Routes>
     </Router>

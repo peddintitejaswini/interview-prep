@@ -48,11 +48,11 @@ const MockLoadPage = () => {
   }
 
   if (!interviewId) {
-    navigate("/generate", { replace: true });
+    navigate("/dashboard/generate", { replace: true });
   }
 
   if (!interview) {
-    navigate("/generate", { replace: true });
+    navigate("/dashboard/generate", { replace: true });
   }
 
   return (
@@ -60,10 +60,12 @@ const MockLoadPage = () => {
       <div className="flex items-center justify-between w-full gap-2">
         <CustomBreadCrumb
           breadCrumbPage={interview?.position || ""}
-          breadCrumbItems={[{ label: "Mock Interviews", link: "/generate" }]}
+          breadCrumbItems={[
+            { label: "Mock Interviews", link: "/dashboard/generate" },
+          ]}
         />
 
-        <Link to={`/generate/interview/${interviewId}/start`}>
+        <Link to={`/dashboard/generate/interview/${interviewId}/start`}>
           <Button size={"sm"}>
             Start <Sparkles />
           </Button>

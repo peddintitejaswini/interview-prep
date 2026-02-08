@@ -103,7 +103,7 @@ const HomePage = () => {
               today&apos;s competitive job market.
             </p>
 
-            <Link to={"/generate"} className="w-full">
+            <Link to={"/dashboard/generate"} className="w-full">
               <Button className="w-3/4">
                 Generate <Sparkles className="ml-2" />
               </Button>
