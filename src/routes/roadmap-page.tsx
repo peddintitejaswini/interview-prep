@@ -12,7 +12,9 @@ const RoadmapPage = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-3xl font-bold tracking-tight">Learning Roadmap</h2>
+        <h2 className="text-2xl font-semibold tracking-tight">
+          Learning Roadmap
+        </h2>
         <p className="text-muted-foreground mt-2">
           Get personalized learning paths to enhance your skills
         </p>
