@@ -54,7 +54,7 @@ const Dashboard = () => {
       <div className="flex w-full items-center justify-between">
         {/*Heading */}
         <Headings
-          title="Dashboard"
+          title="Mock Interviews"
           description="create and start your AI mock interview "
         />
 

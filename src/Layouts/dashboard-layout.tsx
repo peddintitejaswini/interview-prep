@@ -56,7 +56,7 @@ const DashboardLayout = () => {
         <Sidebar collapsible="icon" className="border-r">
           <SidebarHeader className="border-b px-4 py-4">
             <div className="flex items-center gap-3 group-data-[collapsible=icon]:justify-center">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm">
+              <div className="flex h-9 w-9 items-center justify-center rounded-lg p-2 bg-primary text-primary-foreground shadow-sm">
                 <MessageSquare className="h-5 w-5" />
               </div>
               <div className="flex flex-col group-data-[collapsible=icon]:hidden">

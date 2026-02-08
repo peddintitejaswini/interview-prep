@@ -34,7 +34,7 @@ export const InterviewPin = ({
 
   return (
     <>
-      <Card className="p-4 rounded-md shadow-none hover:shadow-md shadow-gray-100 transition-all flex flex-col h-[260px] gap-2">
+      <Card className="p-4 rounded-xl border-2 border-gray-150 shadow-gray-100 transition-all flex flex-col h-[260px] gap-2">
         <div className="flex-shrink-0">
           <CardTitle className="text-lg">{interview?.position}</CardTitle>
         </div>
