@@ -7,8 +7,7 @@ import HomePage from "@/routes/home";
 import SignInPage from "./routes/sign-in";
 import SignUpPage from "./routes/sign-up";
 import ProtectRoutes from "./Layouts/protected-routes";
-import MainLayout from "./Layouts/main-layout";
-import Generate from "./components/generate";
+import DashboardLayout from "./Layouts/dashboard-layout";
 import Dashboard from "./routes/dashboard";
 import CreateEditPage from "./routes/create-edit-page";
 import MockLoadPage from "./routes/mock-load-page";
@@ -17,6 +16,9 @@ import { Feedback } from "./routes/feedback";
 import AboutPage from "./routes/about-page";
 import ServicesPage from "./routes/sevices-page";
 import ContactPage from "./routes/contact-page";
+import SkillGapPage from "./routes/skill-gap-page";
+import RoadmapPage from "./routes/roadmap-page";
+import JobRolesPage from "./routes/job-roles-page";
 
 const App = () => {
   return (
@@ -25,11 +27,10 @@ const App = () => {
         {/*Public routes*/}
         <Route element={<PublicLayout />}>
           <Route index element={<HomePage />}></Route>
-            
-            <Route path="/about" element={<AboutPage />} />
-            <Route path="/services" element={<ServicesPage />} />
-            <Route path="/contact" element={<ContactPage />} />
-          
+
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/services" element={<ServicesPage />} />
+          <Route path="/contact" element={<ContactPage />} />
         </Route>
 
         {/*Authentication Layout */}
@@ -42,20 +43,23 @@ const App = () => {
         <Route
           element={
             <ProtectRoutes>
-              <MainLayout />
+              <DashboardLayout />
             </ProtectRoutes>
           }
+          path="/generate"
         >
-          <Route element={<Generate />} path="/generate">
-            <Route index element={<Dashboard />} />
-            <Route path=":interviewId" element={<CreateEditPage />} />
-            <Route path="interview/:interviewId" element={<MockLoadPage />} />
-            <Route
-              path="interview/:interviewId/start"
-              element={<MockInterviewPage />}
-            />
-            <Route path="feedback/:interviewId" element={<Feedback />} />
-          </Route>
+          <Route index element={<Dashboard />} />
+          <Route path="skill-gap" element={<SkillGapPage />} />
+          <Route path="roadmap" element={<RoadmapPage />} />
+          <Route path="job-roles" element={<JobRolesPage />} />
+          <Route path="create" element={<CreateEditPage />} />
+          <Route path=":interviewId" element={<CreateEditPage />} />
+          <Route path="interview/:interviewId" element={<MockLoadPage />} />
+          <Route
+            path="interview/:interviewId/start"
+            element={<MockInterviewPage />}
+          />
+          <Route path="feedback/:interviewId" element={<Feedback />} />
         </Route>
       </Routes>
     </Router>
