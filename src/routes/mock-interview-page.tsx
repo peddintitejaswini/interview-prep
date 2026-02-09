@@ -8,11 +8,23 @@ import { db } from "@/config/firebase.config";
 import CustomBreadCrumb from "@/components/custom-bread-crumb";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Lightbulb } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import { Lightbulb, XCircle } from "lucide-react";
 import QuestionSection from "../components/question-section";
 const MockInterviewPage = () => {
   const { interviewId } = useParams<{ interviewId: string }>();
   const [interview, setInterview] = useState<Interview | null>(null);
+  const [showEndTestDialog, setShowEndTestDialog] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -41,6 +53,11 @@ const MockInterviewPage = () => {
     fetchInterview();
   }, [interviewId, navigate]);
 
+  const handleEndTest = () => {
+    setShowEndTestDialog(false);
+    navigate(`/dashboard/generate/feedback/${interviewId}`);
+  };
+
   if (isLoading) {
     return <LoaderPage className="w-full h-[70vh]" />;
   }
@@ -66,6 +83,19 @@ const MockInterviewPage = () => {
         ]}
       />
 
+      {/* End Test Button */}
+      <div className="flex justify-end mb-4">
+        <Button
+          variant="destructive"
+          size="sm"
+          onClick={() => setShowEndTestDialog(true)}
+          className="gap-2"
+        >
+          <XCircle className="h-4 w-4" />
+          End Test
+        </Button>
+      </div>
+
       <div className="w-full">
         <Alert className="bg-sky-100 border border-sky-200 p-4 rounded-lg flex items-start gap-3">
           <Lightbulb className="h-5 w-5 text-sky-600" />
@@ -78,7 +108,7 @@ const MockInterviewPage = () => {
               finish the interview, you&apos;ll receive feedback comparing your
               responses with the ideal answers.
               <br />
-              <br />
+              {/* <br /> */}
               <strong>Note:</strong>{" "}
               <span className="font-medium">Your video is never recorded.</span>{" "}
               You can disable the webcam anytime if preferred.
@@ -92,6 +122,33 @@ const MockInterviewPage = () => {
           <QuestionSection questions={interview?.questions} />
         </div>
       )}
+
+      {/* End Test Confirmation Dialog */}
+      <AlertDialog open={showEndTestDialog} onOpenChange={setShowEndTestDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>End Test Early?</AlertDialogTitle>
+            <AlertDialogDescription className="space-y-2">
+              <p>
+                Are you sure you want to end this test? You will be redirected
+                to the feedback page.
+              </p>
+              <p className="text-amber-600 font-medium">
+                ⚠️ Any unanswered questions will not be graded.
+              </p>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Continue Test</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleEndTest}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              End & View Feedback
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import useSpeechToText, { type ResultType } from "react-hook-speech-to-text";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import WebCam from "react-webcam";
 import { TooltipButton } from "./tool-tip-button";
 import { toast } from "sonner";
@@ -31,6 +31,8 @@ interface RecordAnswerProps {
   question: { question: string; answer: string };
   isWebCam: boolean;
   setIsWebCam: (value: boolean) => void;
+  questionIndex: number;
+  totalQuestions: number;
 }
 
 interface AIResponse {
@@ -42,6 +44,8 @@ const RecordAnswer = ({
   question,
   isWebCam,
   setIsWebCam,
+  questionIndex,
+  totalQuestions,
 }: RecordAnswerProps) => {
   const {
     interimResult,
@@ -62,6 +66,7 @@ const RecordAnswer = ({
 
   const { userId } = useAuth();
   const { interviewId } = useParams();
+  const navigate = useNavigate();
 
   const recordUserAnswer = async () => {
     if (isRecording) {
@@ -79,7 +84,7 @@ const RecordAnswer = ({
       const aiResult = await generateResult(
         question.question,
         question.answer,
-        userAnswer
+        userAnswer,
       );
 
       setAiResult(aiResult);
@@ -106,7 +111,7 @@ const RecordAnswer = ({
   const generateResult = async (
     qst: string,
     qstAns: string,
-    userAns: string
+    userAns: string,
   ): Promise<AIResponse> => {
     setIsAiGenerating(true);
     const prompt = `
@@ -121,7 +126,7 @@ const RecordAnswer = ({
       const aiResult = await chatSession.sendMessage(prompt);
 
       const parsedResult: AIResponse = cleanJsonResponse(
-        aiResult.response.text()
+        aiResult.response.text(),
       );
       return parsedResult;
     } catch (error) {
@@ -155,7 +160,7 @@ const RecordAnswer = ({
       const userAnswerQuery = query(
         collection(db, "userAnswers"),
         where("userId", "==", userId),
-        where("question", "==", currentQuestion)
+        where("question", "==", currentQuestion),
       );
 
       const querySnap = await getDocs(userAnswerQuery);
@@ -182,6 +187,17 @@ const RecordAnswer = ({
         });
 
         toast("Saved", { description: "Your answer has been saved.." });
+
+        // Check if this is the last question and auto-redirect
+        if (questionIndex === totalQuestions - 1) {
+          toast.success("Interview Complete!", {
+            description: "Redirecting to feedback page...",
+          });
+
+          setTimeout(() => {
+            navigate(`/dashboard/generate/feedback/${interviewId}`);
+          }, 1500);
+        }
       }
 
       setUserAnswer("");
