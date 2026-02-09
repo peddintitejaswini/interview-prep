@@ -22,7 +22,6 @@ import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import RoadmapCard from "@/components/roadmap-card";
 import JdSelector from "@/components/jd-selector";
-import RoadmapDisplay from "@/components/roadmap-display";
 
 const JdRoadmapPage = () => {
   const { userId } = useAuth();
@@ -30,9 +29,6 @@ const JdRoadmapPage = () => {
   const [selectedJD, setSelectedJD] = useState<JobDescription | null>(null);
   const [daysRemaining, setDaysRemaining] = useState<number>(30);
   const [roadmaps, setRoadmaps] = useState<Roadmap[]>([]);
-  const [generatedRoadmap, setGeneratedRoadmap] = useState<Roadmap | null>(
-    null,
-  );
   const [loading, setLoading] = useState(false);
   const [loadingInterviews, setLoadingInterviews] = useState(true);
   const [loadingRoadmaps, setLoadingRoadmaps] = useState(true);
@@ -80,6 +76,7 @@ const JdRoadmapPage = () => {
       },
       (error) => {
         toast.error("Error loading roadmaps");
+        console.log(error.message);
         setLoadingRoadmaps(false);
       },
     );
@@ -172,20 +169,6 @@ const JdRoadmapPage = () => {
         jobTitle: selectedJD.title,
       });
 
-      const newRoadmap: Roadmap = {
-        id: roadmapId,
-        jdId: selectedJD.id,
-        userId,
-        totalWeeks,
-        timeRemaining: daysRemaining,
-        roadmapItems,
-        jobTitle: selectedJD.title,
-        generatedDate: new Date() as any,
-        createdAt: new Date() as any,
-        updatedAt: new Date() as any,
-      };
-
-      setGeneratedRoadmap(newRoadmap);
       toast.success("Roadmap generated successfully!", { id: "roadmap-gen" });
     } catch (error) {
       console.error("Error generating roadmap:", error);
@@ -267,14 +250,6 @@ const JdRoadmapPage = () => {
         </div>
       )}
 
-      {/* Display Generated Roadmap */}
-      {generatedRoadmap && (
-        <div className="mb-8">
-          <h2 className="text-xl font-semibold mb-4">Generated Roadmap</h2>
-          <RoadmapDisplay roadmap={generatedRoadmap} />
-        </div>
-      )}
-
       {/* Previous Roadmaps */}
       <div className="mt-12">
         <h2 className="text-xl font-semibold mb-4">Your Roadmaps</h2>
@@ -287,11 +262,7 @@ const JdRoadmapPage = () => {
         ) : roadmaps.length > 0 ? (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             {roadmaps.map((roadmap) => (
-              <RoadmapCard
-                key={roadmap.id}
-                roadmap={roadmap}
-                onView={() => setGeneratedRoadmap(roadmap)}
-              />
+              <RoadmapCard key={roadmap.id} roadmap={roadmap} />
             ))}
           </div>
         ) : (

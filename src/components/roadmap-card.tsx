@@ -3,16 +3,17 @@ import { Calendar, Clock, Trash2, Eye } from "lucide-react";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import DeleteModal from "./delete-modal";
 import { deleteRoadmap } from "@/handlers/roadmap-operations";
 import { toast } from "sonner";
 
 interface RoadmapCardProps {
   roadmap: Roadmap;
-  onView: () => void;
 }
 
-const RoadmapCard = ({ roadmap, onView }: RoadmapCardProps) => {
+const RoadmapCard = ({ roadmap }: RoadmapCardProps) => {
+  const navigate = useNavigate();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -38,6 +39,10 @@ const RoadmapCard = ({ roadmap, onView }: RoadmapCardProps) => {
       day: "numeric",
       year: "numeric",
     });
+  };
+
+  const handleViewRoadmap = () => {
+    navigate(`/dashboard/jd-roadmap/${roadmap.id}`);
   };
 
   return (
@@ -88,7 +93,7 @@ const RoadmapCard = ({ roadmap, onView }: RoadmapCardProps) => {
 
         {/* View Button */}
         <Button
-          onClick={onView}
+          onClick={handleViewRoadmap}
           className="w-full mt-4"
           variant="outline"
           size="sm"
