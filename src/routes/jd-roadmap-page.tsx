@@ -16,12 +16,15 @@ import {
   fetchUserRoadmaps,
 } from "@/handlers/roadmap-operations";
 import { generateRoadmap } from "@/scripts/roadmap-generator";
+import { extractTechStack } from "@/scripts/tech-stack-extractor";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 // import RoadmapCard from "@/components/roadmap-card";
 import { Skeleton } from "@/components/ui/skeleton";
 import RoadmapCard from "@/components/roadmap-card";
 import JdSelector from "@/components/jd-selector";
+import { Badge } from "@/components/ui/badge";
+import { Briefcase } from "lucide-react";
 
 const JdRoadmapPage = () => {
   const { userId } = useAuth();
@@ -120,53 +123,87 @@ const JdRoadmapPage = () => {
   const handleCreateManualJD = async (jdData: {
     title: string;
     description: string;
-    techStack: string;
     experience: number;
+    daysRemaining: number;
   }) => {
     try {
+      setLoading(true);
+      toast.loading("Extracting tech stack from job description...", {
+        id: "extract-tech",
+      });
+
+      // Extract tech stack from description using AI
+      const techStack = await extractTechStack(jdData.description);
+
+      toast.success("Tech stack extracted successfully!", {
+        id: "extract-tech",
+      });
+
       const jdId = await createJD({
-        ...jdData,
+        title: jdData.title,
+        description: jdData.description,
+        techStack: techStack,
+        experience: jdData.experience,
         source: "manual",
         userId: userId!,
       });
 
-      setSelectedJD({
+      const newJD: JobDescription = {
         id: jdId,
-        ...jdData,
+        title: jdData.title,
+        description: jdData.description,
+        techStack: techStack,
+        experience: jdData.experience,
         source: "manual",
         userId: userId!,
         createdAt: new Date() as any,
         updatedAt: new Date() as any,
-      });
+      };
+
+      setSelectedJD(newJD);
+      setDaysRemaining(jdData.daysRemaining);
 
       toast.success("Job description created");
+
+      // Auto-generate roadmap after JD creation
+      await handleGenerateRoadmapWithJD(newJD, jdData.daysRemaining);
     } catch (error) {
       console.error("Error creating JD:", error);
       toast.error("Failed to create job description");
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleGenerateRoadmap = async () => {
     if (!selectedJD || !userId) return;
+    await handleGenerateRoadmapWithJD(selectedJD, daysRemaining);
+  };
+
+  const handleGenerateRoadmapWithJD = async (
+    jd: JobDescription,
+    days: number,
+  ) => {
+    if (!userId) return;
 
     try {
       setLoading(true);
       toast.loading("Generating roadmap...", { id: "roadmap-gen" });
 
       // Generate roadmap using AI
-      const roadmapItems = await generateRoadmap(selectedJD, daysRemaining);
+      const roadmapItems = await generateRoadmap(jd, days);
 
       // Calculate total weeks
-      const totalWeeks = Math.ceil(daysRemaining / 7);
+      const totalWeeks = Math.ceil(days / 7);
 
       // Save to Firebase
-      const roadmapId = await createRoadmap({
-        jdId: selectedJD.id,
+      await createRoadmap({
+        jdId: jd.id,
         userId,
         totalWeeks,
-        timeRemaining: daysRemaining,
+        timeRemaining: days,
         roadmapItems,
-        jobTitle: selectedJD.title,
+        jobTitle: jd.title,
       });
 
       toast.success("Roadmap generated successfully!", { id: "roadmap-gen" });
@@ -182,30 +219,71 @@ const JdRoadmapPage = () => {
 
   return (
     <div className="min-h-screen">
-      <div className="flex w-full items-center justify-between">
+      {/* Header with Actions */}
+      <div className="flex w-full items-start justify-between gap-4">
         <Headings
           title="JD to Roadmap"
           description="Generate personalized learning roadmaps from job descriptions"
         />
+
+        {/* Action Buttons - Top Right */}
+        <div className="flex gap-2 pt-1">
+          <JdSelector
+            interviews={interviews}
+            loading={loadingInterviews}
+            onSelectFromInterview={handleSelectFromInterview}
+            onCreateManual={handleCreateManualJD}
+            selectedJD={selectedJD}
+          />
+        </div>
       </div>
       <Separator className="my-8" />
 
-      {/* JD Selection Section */}
-      <div className="mb-8">
-        <h2 className="text-xl font-semibold mb-4">
-          Step 1: Select or Create Job Description
-        </h2>
-        <JdSelector
-          interviews={interviews}
-          loading={loadingInterviews}
-          onSelectFromInterview={handleSelectFromInterview}
-          onCreateManual={handleCreateManualJD}
-          selectedJD={selectedJD}
-        />
-      </div>
-
-      {/* Time Input & Generate Section */}
+      {/* Selected JD Display - Full width below header */}
       {selectedJD && (
+        <div className="mb-8 p-6 rounded-lg border bg-card shadow-sm">
+          <div className="flex items-start justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <Briefcase className="h-5 w-5 text-primary" />
+              <h3 className="text-lg font-semibold">{selectedJD.title}</h3>
+            </div>
+            <Badge
+              variant={selectedJD.source === "manual" ? "default" : "secondary"}
+            >
+              {selectedJD.source === "manual" ? "Manual" : "From Interview"}
+            </Badge>
+          </div>
+          <div className="space-y-2 text-sm">
+            <div>
+              <span className="font-medium text-muted-foreground">
+                Description:{" "}
+              </span>
+              <p className="mt-1 text-foreground line-clamp-3">
+                {selectedJD.description}
+              </p>
+            </div>
+            <div>
+              <span className="font-medium text-muted-foreground">
+                Tech Stack:{" "}
+              </span>
+              <span className="text-foreground">{selectedJD.techStack}</span>
+            </div>
+            {selectedJD.experience > 0 && (
+              <div>
+                <span className="font-medium text-muted-foreground">
+                  Experience:{" "}
+                </span>
+                <span className="text-foreground">
+                  {selectedJD.experience} years
+                </span>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Time Input & Generate Section - Only for Interview-selected JDs */}
+      {selectedJD && selectedJD.source === "interview" && (
         <div className="mb-8 p-6 rounded-lg shadow-md border bg-card">
           <h2 className="text-xl font-semibold mb-4">
             Step 2: Set Timeline & Generate

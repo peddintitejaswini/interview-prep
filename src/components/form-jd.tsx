@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -20,8 +21,11 @@ const formSchema = z.object({
     .min(1, "Job title is required")
     .max(100, "Title must be 100 characters or less"),
   description: z.string().min(10, "Description must be at least 10 characters"),
-  techStack: z.string().min(1, "Tech stack is required"),
   experience: z.coerce.number().min(0, "Experience cannot be negative"),
+  daysRemaining: z.coerce
+    .number()
+    .min(7, "Minimum 7 days required")
+    .max(365, "Maximum 365 days allowed"),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -38,8 +42,8 @@ const FormJd = ({ onSubmit, onCancel }: FormJdProps) => {
     defaultValues: {
       title: "",
       description: "",
-      techStack: "",
       experience: 0,
+      daysRemaining: 30,
     },
   });
 
@@ -84,30 +88,14 @@ const FormJd = ({ onSubmit, onCancel }: FormJdProps) => {
               <FormControl>
                 <Textarea
                   className="min-h-32"
-                  placeholder="Paste the full job description here..."
+                  placeholder="Paste the full job description here... (Tech stack will be extracted automatically)"
                   {...field}
                 />
               </FormControl>
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="techStack"
-          render={({ field }) => (
-            <FormItem>
-              <div className="flex items-center justify-between">
-                <FormLabel>Tech Stack / Skills Required</FormLabel>
-                <FormMessage className="text-sm" />
-              </div>
-              <FormControl>
-                <Textarea
-                  className="h-20"
-                  placeholder="e.g., React, TypeScript, Node.js, PostgreSQL"
-                  {...field}
-                />
-              </FormControl>
+              <FormDescription>
+                We'll automatically extract the required skills and technologies
+                from this description
+              </FormDescription>
             </FormItem>
           )}
         />
@@ -133,6 +121,34 @@ const FormJd = ({ onSubmit, onCancel }: FormJdProps) => {
           )}
         />
 
+        <FormField
+          control={form.control}
+          name="daysRemaining"
+          render={({ field }) => (
+            <FormItem>
+              <div className="flex items-center justify-between">
+                <FormLabel>Time Available (Days)</FormLabel>
+                <FormMessage className="text-sm" />
+              </div>
+              <FormControl>
+                <Input
+                  type="number"
+                  className="h-12"
+                  placeholder="e.g., 60"
+                  min="7"
+                  max="365"
+                  {...field}
+                />
+              </FormControl>
+              <FormDescription>
+                {field.value
+                  ? `Approximately ${Math.ceil(field.value / 7)} weeks`
+                  : "Enter days between 7 and 365"}
+              </FormDescription>
+            </FormItem>
+          )}
+        />
+
         <div className="flex items-center justify-end gap-4 pt-4">
           <Button type="button" variant="outline" onClick={onCancel}>
             Cancel
@@ -141,10 +157,10 @@ const FormJd = ({ onSubmit, onCancel }: FormJdProps) => {
             {isSubmitting ? (
               <>
                 <Loader className="mr-2 h-4 w-4 animate-spin" />
-                Creating...
+                Creating & Generating...
               </>
             ) : (
-              "Create JD"
+              "Create JD & Generate Roadmap"
             )}
           </Button>
         </div>

@@ -11,8 +11,9 @@ import {
   DialogTrigger,
 } from "./ui/dialog";
 import { Skeleton } from "./ui/skeleton";
-import FormJd from "./form-jd";
+// import FormJd from "./form-jd";
 import { Badge } from "./ui/badge";
+import FormJd from "./form-jd";
 
 interface JdSelectorProps {
   interviews: Interview[];
@@ -53,59 +54,16 @@ const JdSelector = ({
   };
 
   return (
-    <div className="space-y-4">
-      {/* Selected JD Display */}
-      {selectedJD && (
-        <div className="p-6 rounded-lg border bg-card shadow-sm">
-          <div className="flex items-start justify-between mb-4">
-            <div className="flex items-center gap-2">
-              <Briefcase className="h-5 w-5 text-primary" />
-              <h3 className="text-lg font-semibold">{selectedJD.title}</h3>
-            </div>
-            <Badge
-              variant={selectedJD.source === "manual" ? "default" : "secondary"}
-            >
-              {selectedJD.source === "manual" ? "Manual" : "From Interview"}
-            </Badge>
-          </div>
-          <div className="space-y-2 text-sm">
-            <div>
-              <span className="font-medium text-muted-foreground">
-                Description:{" "}
-              </span>
-              <p className="mt-1 text-foreground line-clamp-3">
-                {selectedJD.description}
-              </p>
-            </div>
-            <div>
-              <span className="font-medium text-muted-foreground">
-                Tech Stack:{" "}
-              </span>
-              <span className="text-foreground">{selectedJD.techStack}</span>
-            </div>
-            {selectedJD.experience > 0 && (
-              <div>
-                <span className="font-medium text-muted-foreground">
-                  Experience:{" "}
-                </span>
-                <span className="text-foreground">
-                  {selectedJD.experience} years
-                </span>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* Selection Buttons */}
-      <div className="flex flex-wrap gap-4">
+    <>
+      {/* Compact Action Buttons for top-right placement */}
+      <div className="flex gap-2">
         {/* Select from Interviews */}
         <Dialog
           open={showInterviewDialog}
           onOpenChange={setShowInterviewDialog}
         >
           <DialogTrigger asChild>
-            <Button variant="outline" size="lg">
+            <Button variant="outline" size="sm">
               <FileText className="mr-2 h-4 w-4" />
               Select from Interviews
             </Button>
@@ -160,7 +118,7 @@ const JdSelector = ({
         {/* Create Manual JD */}
         <Dialog open={showManualDialog} onOpenChange={setShowManualDialog}>
           <DialogTrigger asChild>
-            <Button size="lg">
+            <Button size="sm">
               <Plus className="mr-2 h-4 w-4" />
               Add New JD
             </Button>
@@ -181,7 +139,7 @@ const JdSelector = ({
           </DialogContent>
         </Dialog>
       </div>
-    </div>
+    </>
   );
 };
 
