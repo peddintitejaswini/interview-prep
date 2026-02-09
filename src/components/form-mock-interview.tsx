@@ -129,12 +129,9 @@ const FormMockInterview = ({ initialData }: FormMockInterviewProps) => {
       setLoading(true);
 
       if (initialData) {
-        // update
+        // update - just update the details, don't regenerate questions
         if (isValid) {
-          const aiResult = await generateAiResponse(data);
-
           await updateDoc(doc(db, "interviews", initialData?.id), {
-            questions: aiResult,
             ...data,
             updatedAt: serverTimestamp(),
           }).catch((error) => console.log(error));
