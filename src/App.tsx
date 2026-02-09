@@ -19,6 +19,7 @@ import ContactPage from "./routes/contact-page";
 import SkillGapPage from "./routes/skill-gap-page";
 import RoadmapPage from "./routes/roadmap-page";
 import JobRolesPage from "./routes/job-roles-page";
+import JdRoadmapPage from "./routes/jd-roadmap-page";
 
 const App = () => {
   return (
@@ -51,6 +52,7 @@ const App = () => {
           <Route path="generate" element={<Dashboard />} />
           <Route path="skill-gap" element={<SkillGapPage />} />
           <Route path="roadmap" element={<RoadmapPage />} />
+          <Route path="jd-roadmap" element={<JdRoadmapPage />} />
           <Route path="job-roles" element={<JobRolesPage />} />
           <Route path="generate/create" element={<CreateEditPage />} />
           <Route path="generate/:interviewId" element={<CreateEditPage />} />

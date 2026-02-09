@@ -40,6 +40,12 @@ const navItems = [
     description: "Skill gaining roadmap",
   },
   {
+    title: "JD to Roadmap",
+    url: "/dashboard/jd-roadmap",
+    icon: Map,
+    description: "Generate learning roadmap from job descriptions",
+  },
+  {
     title: "Job Role Eligibility",
     url: "/dashboard/job-roles",
     icon: Briefcase,
