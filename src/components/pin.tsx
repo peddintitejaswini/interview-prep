@@ -60,7 +60,7 @@ export const InterviewPin = ({
         loading={loading}
       />
 
-      <Card className="p-6 rounded-xl border-2 border-gray-150 shadow-sm hover:shadow-md transition-all hover:border-primary/50 flex flex-col h-[280px] gap-3 relative group">
+      <Card className="p-6 rounded-xl border shadow-sm hover:shadow-md transition-all hover:border-primary/50 flex flex-col h-[280px] gap-3 relative group">
         {/* Delete Button */}
         <Button
           size="icon"

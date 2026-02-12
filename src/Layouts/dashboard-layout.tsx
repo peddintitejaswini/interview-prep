@@ -61,10 +61,14 @@ const DashboardLayout = () => {
     <SidebarProvider>
       <div className="flex h-screen w-full overflow-hidden">
         <Sidebar collapsible="icon" className="border-r">
-          <SidebarHeader className="border-b px-4 py-4">
-            <div className="flex items-center gap-3 group-data-[collapsible=icon]:justify-center">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg p-2 bg-primary text-primary-foreground shadow-sm">
-                <MessageSquare className="h-5 w-5" />
+          <SidebarHeader className="border-b py-3.5 group-data-[collapsible=icon]:px-2 px-4">
+            <div className="flex items-center gap-3 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg overflow-hidden bg-white shadow-sm shrink-0">
+                <img
+                  src="/image.png"
+                  alt="Interview Prep Logo"
+                  className="h-full w-full object-contain"
+                />
               </div>
               <div className="flex flex-col group-data-[collapsible=icon]:hidden">
                 <span className="text-sm font-semibold">Interview Prep</span>
@@ -72,7 +76,7 @@ const DashboardLayout = () => {
               </div>
             </div>
           </SidebarHeader>
-          <SidebarContent className="px-2">
+          <SidebarContent className="">
             <SidebarGroup>
               <SidebarGroupLabel className="px-2 text-xs font-semibold text-muted-foreground group-data-[collapsible=icon]:hidden">
                 Features
