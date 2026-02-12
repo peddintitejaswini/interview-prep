@@ -8,13 +8,21 @@ import { useAuth } from "@clerk/clerk-react";
 import { Separator } from "@radix-ui/react-separator";
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { Plus } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const Dashboard = () => {
   const [interviews, setInterviews] = useState<Interview[]>([]);
   const [loading, setLoading] = useState(false);
+  const [sortBy, setSortBy] = useState<string>("recent");
   const { userId } = useAuth();
 
   useEffect(() => {
@@ -49,6 +57,28 @@ const Dashboard = () => {
     return () => unsubscribe();
   }, [userId]);
 
+  // Sort interviews based on selected option
+  const sortedInterviews = useMemo(() => {
+    const sorted = [...interviews];
+
+    switch (sortBy) {
+      case "recent":
+        return sorted.sort((a, b) => {
+          const aTime = a.createdAt as any;
+          const bTime = b.createdAt as any;
+          return (bTime?.seconds || 0) - (aTime?.seconds || 0);
+        });
+      case "alpha":
+        return sorted.sort((a, b) => a.position.localeCompare(b.position));
+      case "exp-asc":
+        return sorted.sort((a, b) => a.experience - b.experience);
+      case "exp-desc":
+        return sorted.sort((a, b) => b.experience - a.experience);
+      default:
+        return sorted;
+    }
+  }, [interviews, sortBy]);
+
   return (
     <div className="min-h-screen">
       <div className="flex w-full items-center justify-between">
@@ -66,14 +96,36 @@ const Dashboard = () => {
         </Link>
       </div>
       <Separator className="my-8" />
+
+      {/* Heading with Sort - Same style as Your Roadmaps */}
+      <div className="flex items-center justify-between ">
+        <h2 className="text-xl font-semibold">Your Mock Interviews</h2>
+        {!loading && interviews.length > 0 && (
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-muted-foreground">Sort by:</span>
+            <Select value={sortBy} onValueChange={setSortBy}>
+              <SelectTrigger className="w-[200px]">
+                <SelectValue placeholder="Select sort option" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="recent">Most Recent</SelectItem>
+                <SelectItem value="alpha">Alphabetical (A-Z)</SelectItem>
+                <SelectItem value="exp-asc">Least Experience</SelectItem>
+                <SelectItem value="exp-desc">Most Experience</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        )}
+      </div>
+
       {/*Content Section*/}
       <div className="md:grid md:grid-cols-3 gap-3 py-4">
         {loading ? (
           Array.from({ length: 6 }).map((_, index) => (
             <Skeleton key={index} className="h-24 md:h-32 rounded-md" />
           ))
-        ) : interviews.length > 0 ? (
-          interviews.map((interview) => (
+        ) : sortedInterviews.length > 0 ? (
+          sortedInterviews.map((interview) => (
             <InterviewPin key={interview.id} interview={interview} />
           ))
         ) : (

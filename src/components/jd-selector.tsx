@@ -26,6 +26,7 @@ interface JdSelectorProps {
     daysRemaining: number;
   }) => Promise<void>;
   selectedJD: JobDescription | null;
+  generating?: boolean;
 }
 
 const JdSelector = ({
@@ -33,6 +34,7 @@ const JdSelector = ({
   loading,
   onSelectFromInterview,
   onCreateManual,
+  generating = false,
 }: JdSelectorProps) => {
   const [showInterviewDialog, setShowInterviewDialog] = useState(false);
   const [showManualDialog, setShowManualDialog] = useState(false);
@@ -42,13 +44,13 @@ const JdSelector = ({
     setShowInterviewDialog(false);
   };
 
-  const handleManualCreate = (jdData: {
+  const handleManualCreate = async (jdData: {
     title: string;
     description: string;
     experience: number;
     daysRemaining: number;
   }) => {
-    onCreateManual(jdData);
+    await onCreateManual(jdData);
     setShowManualDialog(false);
   };
 
@@ -134,6 +136,7 @@ const JdSelector = ({
             <FormJd
               onSubmit={handleManualCreate}
               onCancel={() => setShowManualDialog(false)}
+              loading={generating}
             />
           </DialogContent>
         </Dialog>

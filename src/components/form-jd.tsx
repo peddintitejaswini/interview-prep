@@ -33,9 +33,10 @@ type FormData = z.infer<typeof formSchema>;
 interface FormJdProps {
   onSubmit: (data: FormData) => void;
   onCancel: () => void;
+  loading?: boolean;
 }
 
-const FormJd = ({ onSubmit, onCancel }: FormJdProps) => {
+const FormJd = ({ onSubmit, onCancel, loading = false }: FormJdProps) => {
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -46,7 +47,8 @@ const FormJd = ({ onSubmit, onCancel }: FormJdProps) => {
     },
   });
 
-  const { isSubmitting, isValid } = form.formState;
+  const { isSubmitting } = form.formState;
+  const isLoading = isSubmitting || loading;
 
   const handleSubmit = (data: FormData) => {
     onSubmit(data);
@@ -113,7 +115,10 @@ const FormJd = ({ onSubmit, onCancel }: FormJdProps) => {
                   type="number"
                   className="h-12"
                   placeholder="e.g., 3"
-                  {...field}
+                  value={field.value}
+                  onChange={(e) => field.onChange(Number(e.target.value))}
+                  onBlur={field.onBlur}
+                  name={field.name}
                 />
               </FormControl>
             </FormItem>
@@ -136,7 +141,10 @@ const FormJd = ({ onSubmit, onCancel }: FormJdProps) => {
                   placeholder="e.g., 60"
                   min="7"
                   max="365"
-                  {...field}
+                  value={field.value}
+                  onChange={(e) => field.onChange(Number(e.target.value))}
+                  onBlur={field.onBlur}
+                  name={field.name}
                 />
               </FormControl>
               <FormDescription>
@@ -149,11 +157,16 @@ const FormJd = ({ onSubmit, onCancel }: FormJdProps) => {
         />
 
         <div className="flex items-center justify-end gap-4 pt-4">
-          <Button type="button" variant="outline" onClick={onCancel}>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={onCancel}
+            disabled={isLoading}
+          >
             Cancel
           </Button>
-          <Button type="submit" disabled={isSubmitting || !isValid}>
-            {isSubmitting ? (
+          <Button type="submit" disabled={isLoading}>
+            {isLoading ? (
               <>
                 <Loader className="mr-2 h-4 w-4 animate-spin" />
                 Creating & Generating...

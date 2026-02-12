@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useAuth } from "@clerk/clerk-react";
 import { toast } from "sonner";
 import type { Interview, JobDescription, Roadmap } from "@/types";
@@ -24,6 +24,13 @@ import RoadmapCard from "@/components/roadmap-card";
 import JdSelector from "@/components/jd-selector";
 import { Badge } from "@/components/ui/badge";
 import { Briefcase } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const JdRoadmapPage = () => {
   const { userId } = useAuth();
@@ -34,6 +41,7 @@ const JdRoadmapPage = () => {
   const [loading, setLoading] = useState(false);
   const [loadingInterviews, setLoadingInterviews] = useState(true);
   const [loadingRoadmaps, setLoadingRoadmaps] = useState(true);
+  const [sortBy, setSortBy] = useState<string>("recent");
 
   // Fetch user's interviews
   useEffect(() => {
@@ -85,6 +93,28 @@ const JdRoadmapPage = () => {
 
     return () => unsubscribe();
   }, [userId]);
+
+  // Sort roadmaps based on selected option
+  const sortedRoadmaps = useMemo(() => {
+    const sorted = [...roadmaps];
+
+    switch (sortBy) {
+      case "recent":
+        return sorted.sort((a, b) => {
+          const aTime = a.createdAt as any;
+          const bTime = b.createdAt as any;
+          return (bTime?.seconds || 0) - (aTime?.seconds || 0);
+        });
+      case "time-asc":
+        return sorted.sort((a, b) => a.timeRemaining - b.timeRemaining);
+      case "time-desc":
+        return sorted.sort((a, b) => b.timeRemaining - a.timeRemaining);
+      case "alpha":
+        return sorted.sort((a, b) => a.jobTitle.localeCompare(b.jobTitle));
+      default:
+        return sorted;
+    }
+  }, [roadmaps, sortBy]);
 
   const handleSelectFromInterview = async (interview: Interview) => {
     try {
@@ -233,24 +263,21 @@ const JdRoadmapPage = () => {
             onSelectFromInterview={handleSelectFromInterview}
             onCreateManual={handleCreateManualJD}
             selectedJD={selectedJD}
+            generating={loading}
           />
         </div>
       </div>
       {/* <Separator className="my-8" /> */}
 
-      {/* Selected JD Display - Full width below header */}
-      {selectedJD && (
+      {/* Selected JD Display - Only for Interview-selected JDs */}
+      {selectedJD && selectedJD.source === "interview" && (
         <div className="mb-8 p-6 rounded-lg border bg-card shadow-sm">
           <div className="flex items-start justify-between mb-4">
             <div className="flex items-center gap-2">
               <Briefcase className="h-5 w-5 text-primary" />
               <h3 className="text-lg font-semibold">{selectedJD.title}</h3>
             </div>
-            <Badge
-              variant={selectedJD.source === "manual" ? "default" : "secondary"}
-            >
-              {selectedJD.source === "manual" ? "Manual" : "From Interview"}
-            </Badge>
+            <Badge variant="secondary">From Interview</Badge>
           </div>
           <div className="space-y-2 text-sm">
             <div>
@@ -329,16 +356,32 @@ const JdRoadmapPage = () => {
 
       {/* Previous Roadmaps */}
       <div className="mt-12">
-        <h2 className="text-xl font-semibold mb-4">Your Roadmaps</h2>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-semibold">Your Roadmaps</h2>
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-muted-foreground">Sort by:</span>
+            <Select value={sortBy} onValueChange={setSortBy}>
+              <SelectTrigger className="w-[200px]">
+                <SelectValue placeholder="Select sort option" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="recent">Most Recent</SelectItem>
+                <SelectItem value="time-asc">Least Time Remaining</SelectItem>
+                <SelectItem value="time-desc">Most Time Remaining</SelectItem>
+                <SelectItem value="alpha">Alphabetical (A-Z)</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
         {loadingRoadmaps ? (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             {Array.from({ length: 3 }).map((_, index) => (
               <Skeleton key={index} className="h-40 rounded-lg" />
             ))}
           </div>
-        ) : roadmaps.length > 0 ? (
+        ) : sortedRoadmaps.length > 0 ? (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {roadmaps.map((roadmap) => (
+            {sortedRoadmaps.map((roadmap) => (
               <RoadmapCard key={roadmap.id} roadmap={roadmap} />
             ))}
           </div>

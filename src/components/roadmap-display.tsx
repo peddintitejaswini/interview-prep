@@ -45,7 +45,7 @@ const RoadmapDisplay = ({ roadmap }: RoadmapDisplayProps) => {
   return (
     <div className="space-y-6">
       {/* Roadmap Header */}
-      <div className="p-6 rounded-lg border bg-gradient-to-r from-primary/10 via-primary/5 to-background shadow-md">
+      <div className="p-6 rounded-lg border">
         <h3 className="text-2xl font-bold mb-4">{roadmap.jobTitle}</h3>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
           <div className="flex items-center gap-2">
