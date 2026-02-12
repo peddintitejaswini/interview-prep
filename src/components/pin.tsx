@@ -10,7 +10,7 @@ import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
 import { TooltipButton } from "./tool-tip-button";
-import { Pencil, Newspaper, Sparkles } from "lucide-react";
+import { Pencil, Newspaper, Sparkles, Trash2 } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -19,6 +19,9 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useState } from "react";
+import DeleteModal from "./delete-modal";
+import { deleteInterview } from "@/handlers/interview-operations";
+import { toast } from "sonner";
 
 interface InterviewPinProps {
   interview: Interview;
@@ -31,10 +34,42 @@ export const InterviewPin = ({
 }: InterviewPinProps) => {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleDelete = async () => {
+    try {
+      setLoading(true);
+      await deleteInterview(interview.id);
+      toast.success("Interview deleted successfully");
+    } catch (error) {
+      console.error("Error deleting interview:", error);
+      toast.error("Failed to delete interview");
+    } finally {
+      setLoading(false);
+      setIsDeleteModalOpen(false);
+    }
+  };
 
   return (
     <>
-      <Card className="p-4 rounded-xl border-2 border-gray-150 shadow-gray-100 transition-all flex flex-col h-[260px] gap-2">
+      <DeleteModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={handleDelete}
+        loading={loading}
+      />
+
+      <Card className="p-6 rounded-xl border-2 border-gray-150 shadow-gray-100 hover:shadow-md transition-all hover:border-primary/50 flex flex-col h-[260px] gap-2 relative group">
+        {/* Delete Button */}
+        <Button
+          size="icon"
+          variant="ghost"
+          className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+          onClick={() => setIsDeleteModalOpen(true)}
+        >
+          <Trash2 className="h-4 w-4 text-red-500" />
+        </Button>
         <div className="flex-shrink-0">
           <CardTitle className="text-lg">{interview?.position}</CardTitle>
         </div>
@@ -46,12 +81,12 @@ export const InterviewPin = ({
             {interview?.description}
           </CardDescription>
         </div>
-        <div className="flex-shrink-0 w-full h-14 flex items-start gap-2 flex-wrap overflow-hidden">
+        <div className="flex-shrink-0 w-full h-14 mt-2 flex items-start gap-2 flex-wrap overflow-hidden">
           {interview?.techStack.split(",").map((word, index) => (
             <Badge
               key={index}
               variant={"outline"}
-              className="text-xs text-muted-foreground hover:border-emerald-400 hover:bg-emerald-50 hover:text-emerald-900"
+              className="text-xs px-2 py-0 text-muted-foreground hover:border-emerald-400 hover:bg-emerald-50 hover:text-emerald-900"
             >
               {word}
             </Badge>
