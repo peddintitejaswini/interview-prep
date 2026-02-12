@@ -237,7 +237,7 @@ const JdRoadmapPage = () => {
           />
         </div>
       </div>
-      <Separator className="my-8" />
+      {/* <Separator className="my-8" /> */}
 
       {/* Selected JD Display - Full width below header */}
       {selectedJD && (

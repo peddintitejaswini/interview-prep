@@ -21,8 +21,8 @@ const formSchema = z.object({
     .min(1, "Job title is required")
     .max(100, "Title must be 100 characters or less"),
   description: z.string().min(10, "Description must be at least 10 characters"),
-  experience: z.coerce.number().min(0, "Experience cannot be negative"),
-  daysRemaining: z.coerce
+  experience: z.number().min(0, "Experience cannot be negative"),
+  daysRemaining: z
     .number()
     .min(7, "Minimum 7 days required")
     .max(365, "Maximum 365 days allowed"),
@@ -37,7 +37,6 @@ interface FormJdProps {
 
 const FormJd = ({ onSubmit, onCancel }: FormJdProps) => {
   const form = useForm<FormData>({
-    //@ts-ignore
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: "",

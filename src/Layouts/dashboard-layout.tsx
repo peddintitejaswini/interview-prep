@@ -28,23 +28,24 @@ const navItems = [
     description: "Create and practice AI mock interviews",
   },
   {
-    title: "Skill Gap Analysis",
-    url: "/dashboard/skill-gap",
-    icon: FileText,
-    description: "Job description and Resume skill gap",
-  },
-  {
-    title: "Learning Roadmap",
-    url: "/dashboard/roadmap",
-    icon: Map,
-    description: "Skill gaining roadmap",
-  },
-  {
     title: "JD to Roadmap",
     url: "/dashboard/jd-roadmap",
     icon: Map,
     description: "Generate learning roadmap from job descriptions",
   },
+  {
+    title: "Skill Gap Analysis",
+    url: "/dashboard/skill-gap",
+    icon: FileText,
+    description: "Job description and Resume skill gap",
+  },
+  // {
+  //   title: "Learning Roadmap",
+  //   url: "/dashboard/roadmap",
+  //   icon: Map,
+  //   description: "Skill gaining roadmap",
+  // },
+
   {
     title: "Job Role Eligibility",
     url: "/dashboard/job-roles",

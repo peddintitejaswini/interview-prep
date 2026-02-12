@@ -22,9 +22,9 @@ interface JdSelectorProps {
   onCreateManual: (jdData: {
     title: string;
     description: string;
-    techStack: string;
     experience: number;
-  }) => void;
+    daysRemaining: number;
+  }) => Promise<void>;
   selectedJD: JobDescription | null;
 }
 
@@ -46,8 +46,8 @@ const JdSelector = ({
   const handleManualCreate = (jdData: {
     title: string;
     description: string;
-    techStack: string;
     experience: number;
+    daysRemaining: number;
   }) => {
     onCreateManual(jdData);
     setShowManualDialog(false);
