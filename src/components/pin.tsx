@@ -60,35 +60,43 @@ export const InterviewPin = ({
         loading={loading}
       />
 
-      <Card className="p-6 rounded-xl border-2 border-gray-150 shadow-gray-100 hover:shadow-md transition-all hover:border-primary/50 flex flex-col h-[260px] gap-2 relative group">
+      <Card className="p-6 rounded-xl border-2 border-gray-150 shadow-sm hover:shadow-md transition-all hover:border-primary/50 flex flex-col h-[280px] gap-3 relative group">
         {/* Delete Button */}
         <Button
           size="icon"
           variant="ghost"
-          className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+          className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity z-10"
           onClick={() => setIsDeleteModalOpen(true)}
         >
           <Trash2 className="h-4 w-4 text-red-500" />
         </Button>
-        <div className="flex-shrink-0">
-          <CardTitle className="text-lg">{interview?.position}</CardTitle>
+
+        {/* Title */}
+        <div className="flex-shrink-0 pr-8">
+          <CardTitle className="text-lg font-semibold line-clamp-1">
+            {interview?.position}
+          </CardTitle>
         </div>
+
+        {/* Description */}
         <div className="flex-grow min-h-0">
           <CardDescription
-            className="line-clamp-3 cursor-pointer hover:text-gray-700 transition-colors"
+            className="line-clamp-3 cursor-pointer hover:text-gray-700 transition-colors text-sm leading-relaxed"
             onClick={() => setIsModalOpen(true)}
           >
             {interview?.description}
           </CardDescription>
         </div>
-        <div className="flex-shrink-0 w-full h-14 mt-2 flex items-start gap-2 flex-wrap overflow-hidden">
+
+        {/* Tech Stack Badges */}
+        <div className="flex-shrink-0 w-full flex items-center gap-1.5 flex-wrap overflow-hidden max-h-[56px]">
           {interview?.techStack.split(",").map((word, index) => (
             <Badge
               key={index}
               variant={"outline"}
-              className="text-xs px-2 py-0 text-muted-foreground hover:border-emerald-400 hover:bg-emerald-50 hover:text-emerald-900"
+              className="text-xs px-2.5 py-0.5 text-muted-foreground hover:border-emerald-400 hover:bg-emerald-50 hover:text-emerald-900 transition-colors"
             >
-              {word}
+              {word.trim()}
             </Badge>
           ))}
         </div>
@@ -102,7 +110,7 @@ export const InterviewPin = ({
           <p className="text-[12px] text-muted-foreground truncate whitespace-nowrap">
             {`${new Date(interview?.createdAt.toDate()).toLocaleDateString(
               "en-US",
-              { dateStyle: "long" },
+              { month: "short", day: "numeric", year: "numeric" },
             )} - ${new Date(interview?.createdAt.toDate()).toLocaleTimeString(
               "en-US",
               { timeStyle: "short" },
