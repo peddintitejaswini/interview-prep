@@ -3,7 +3,6 @@ import { useAuth } from "@clerk/clerk-react";
 import { toast } from "sonner";
 import type { Interview, JobDescription, Roadmap } from "@/types";
 import Headings from "@/components/headings";
-import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Plus, Loader } from "lucide-react";
 // import JdSelector from "@/components/jd-selector";

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { Interview, JobDescription } from "@/types";
 import { Button } from "./ui/button";
-import { Plus, FileText, Briefcase } from "lucide-react";
+import { Plus, FileText } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -33,7 +33,6 @@ const JdSelector = ({
   loading,
   onSelectFromInterview,
   onCreateManual,
-  selectedJD,
 }: JdSelectorProps) => {
   const [showInterviewDialog, setShowInterviewDialog] = useState(false);
   const [showManualDialog, setShowManualDialog] = useState(false);
